@@ -4,6 +4,10 @@ import { CreateUsertRequest } from '../dto/client.dto';
 import { ClientService } from '../services/client..service';
 import { ClientRepository } from '../repository/client.repository';
 import ClientSchema from '../models/client.model';
+import { transporter } from '../utils/mailer';
+import { passwordChangedSuccessful } from '../utils/constants';
+import { capitalizeFirstLetter } from '../utils/helpers';
+import config from '../utils/config';
 
 // import jwt from 'jsonwebtoken';
 // import ClientSchema from '../models/client.model';
@@ -44,10 +48,37 @@ class ClientControlador {
       if (errors)
         return res.status(400).json({ message: 'Verifique los datos.' });
       const data = await clientService.createOneClientService(input);
-      console.log('data', data);
 
-      if (data) return res.status(201).json(data);
-      // if (!data) return res.status(500).json({ message: 'Ocurrió un error.' });
+      if (data) {
+        // if (!data) return res.status(500).json({ message: 'Ocurrió un error.' });
+
+        try {
+          // send mail with defined transport object
+          await transporter.sendMail({
+            // from: `"Cambio de contraseña 👻"<${account.user}>`, // sender address
+            from: `"REYPELISTV 🔥"<${config.ADMIN_EMAIL}>`, // sender address
+            to: data.email, // list of receivers
+            subject: 'Cuenta creada exitosamente', // Subject line
+            // text: 'Hello world? plain text body', // plain text body
+            // html: '<b>Hello world? html body</b>', // html body
+            html: (
+              await passwordChangedSuccessful(
+                capitalizeFirstLetter(data.firstName + ' ' + data.firstSurname)
+              )
+            ).toString(),
+          });
+          console.log(
+            `Sent successfully to ${capitalizeFirstLetter(
+              data.firstName + ' ' + data.firstSurname + ' in ' + data.email
+            )}`
+          );
+
+          return res.status(201).json(data);
+        } catch (err) {
+          console.log(err);
+          throw new Error('Algo salió mal..');
+        }
+      }
     } catch (error) {
       const err = error as Error;
       console.log('err');

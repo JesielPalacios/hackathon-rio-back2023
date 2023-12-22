@@ -9,6 +9,7 @@ import helmet from 'helmet';
 // import { createAdmin } from '../initialSetup';
 import fileUpload from 'express-fileupload';
 import config from './utils/config';
+import './utils/mailer';
 // Initializations
 const app = express();
 app.use(express.json());
@@ -38,6 +39,10 @@ app.use(
 
 // Routes
 app.use('/api', indexRoutes);
+
+app.use('/', (req, res) => {
+  res.status(200).json({ message: 'Hello World!' });
+});
 
 // // this folders for this application will be used to store public file images
 app.use('/uploads', express.static(path.resolve('uploads')));

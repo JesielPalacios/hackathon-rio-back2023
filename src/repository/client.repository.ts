@@ -12,6 +12,10 @@ export class ClientRepository implements IClientRepository {
   }
 
   async createOneClient(data: Client): Promise<Client> {
+    // const storedUser = await ClientSchema.findOne({ email: data.email });
+    // if (storedUser)
+    //   throw new Error('Ya existe una cuenta con este correo electrónico.');
+
     let newClient = new ClientSchema({ ...data });
 
     if (data.files?.image) {
