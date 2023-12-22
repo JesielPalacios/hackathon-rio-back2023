@@ -1,0 +1,47 @@
+
+@localhost=http://localhost
+@localhostPort={{$dotenv PORT}}
+@webhost=www.taller-vehicular.com
+@hostname = {{localhost}}
+@port = {{localhostPort}}
+@host = {{hostname}}:{{port}}
+@contentType = 'application/json'
+@createdAt = {{$datetime iso8601}}
+@email = {{$dotenv ADMIN_EMAIL}}
+@password = {{$dotenv ADMIN_PASSWORD}}
+
+@baseUrl = {{host}}/api
+@authToken = {{login.response.body.accessToken}}
+
+# @name login
+POST {{baseUrl}}/auth/login HTTP/1.1
+content-type: application/json
+
+{
+  "email": "{{email}}",
+  "password": "{{password}}"
+}
+
+###
+# @name movies
+GET http://www.omdbapi.com/?i=tt3896198&apikey=26962d21 HTTP/1.1
+###
+# @name movies
+GET http://www.omdbapi.com/?apikey=26962d21&t=endgame HTTP/1.1
+###
+# @name movies
+GET https://api.themoviedb.org/3/movie/popular?api_key=ad4f944751293854af043da5c16df386&language=en-US&page=1 HTTP/1.1
+
+
+# https://www.omdbapi.com/apikey.aspx?VERIFYKEY=68033db5-7176-4e65-a11d-69610736c5df
+
+
+
+###
+# @name movies
+GET http://img.omdbapi.com/?i=tt3896198&apikey=26962d21 HTTP/1.1
+
+
+# http://www.omdbapi.com/?apikey=[yourkey]&
+# 
+# http://img.omdbapi.com/?apikey=[yourkey]&
